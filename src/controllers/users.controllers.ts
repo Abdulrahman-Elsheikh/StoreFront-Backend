@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import UserStore from '../models/user.model';
+import jwt from 'jsonwebtoken';
+import config from '../middlewares/config';
 
 const userStore = new UserStore();
 
@@ -78,6 +80,30 @@ export const deleteUser = async (
       status: 'success',
       message: 'User Deleted Successfully',
       data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const authenticateUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { email, password } = req.body;
+    const user = await userStore.authenticateUser(email, password);
+    const token = jwt.sign({ user }, config.tokenSecret as unknown as string);
+    if (!user) {
+      return res.status(401).json({
+        status: '401 Unauthorized',
+        message: 'The username and password do not match',
+      });
+    }
+    return res.json({
+      status: 'success',
+      message: 'User authenticated Successfully',
+      data: { ...user, token },
     });
   } catch (error) {
     next(error);
