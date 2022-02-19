@@ -10,9 +10,9 @@ routes
   .post(controllers.createUser);
 routes
   .route('/:id')
-  .get(controllers.getUser)
-  .patch(controllers.updateUser)
-  .delete(controllers.deleteUser);
+  .get(authenticationMiddleware, controllers.getUser)
+  .patch(authenticationMiddleware, controllers.updateUser)
+  .delete(authenticationMiddleware, controllers.deleteUser);
 
 routes.route('/authenticate').post(controllers.authenticateUser);
 

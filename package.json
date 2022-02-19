@@ -9,7 +9,7 @@
     "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess 'node ./dist/server.js'",
     "build": "tsc",
     "database:up": "db-migrate up",
-    "test": "npm run build && jasmine",
+    "test": "set ENV=test&& tsc && db-migrate up --env test && tsc && jasmine && db-migrate reset",
     "format": "prettier --write src/**/*.ts",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix"
