@@ -1,5 +1,12 @@
 import User from '../types/user.type';
 import db from '../database/database';
+import config from '../middlewares/config';
+import bcrypt from 'bcrypt';
+
+const hashPassword = (password: string) => {
+  const salt = parseInt(config.salt as string, 10);
+  return bcrypt.hashSync(`${password}${config.pepper}`, salt);
+};
 
 class UserStore {
   // Create User
@@ -15,7 +22,7 @@ class UserStore {
         u.user_name,
         u.first_name,
         u.last_name,
-        u.password,
+        hashPassword(u.password),
       ]);
       // Release connection
       connection.release();
@@ -63,7 +70,7 @@ class UserStore {
         u.user_name,
         u.first_name,
         u.last_name,
-        u.password,
+        hashPassword(u.password),
         u.id,
       ]);
       connection.release();
