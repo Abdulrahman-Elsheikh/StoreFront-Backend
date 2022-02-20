@@ -1,6 +1,6 @@
-import UserStore from '../models/user.model';
-import db from '../database/database';
-import User from '../types/user.type';
+import UserStore from '../../models/user.model';
+import db from '../../database/database';
+import User from '../../types/user.type';
 
 const userStore = new UserStore();
 

@@ -1,8 +1,8 @@
 import supertest from 'supertest';
-import UserStore from '../models/user.model';
-import db from '../database/database';
-import User from '../types/user.type';
-import app from '../server';
+import UserStore from '../../models/user.model';
+import db from '../../database/database';
+import User from '../../types/user.type';
+import app from '../../server';
 
 const request = supertest(app);
 const userStore = new UserStore();
