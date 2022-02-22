@@ -33,7 +33,7 @@ class ProductStore {
       throw new Error(`Can't get all products: ${(error as Error).message}`);
     }
   }
-  // Get Specific Product
+  // Get A Specific Product
   async getProduct(id: string): Promise<Product> {
     try {
       const connection = await db.connect();
@@ -44,6 +44,22 @@ class ProductStore {
     } catch (error) {
       throw new Error(
         `Can't find product with id ${id}, ${(error as Error).message}`
+      );
+    }
+  }
+  // Get Products By Category
+  async getProductsByCategory(category: string): Promise<Product[]> {
+    try {
+      const connection = await db.connect();
+      const sql = `SELECT * FROM products WHERE category = $1`;
+      const result = await connection.query(sql, [category]);
+      connection.release();
+      return result.rows;
+    } catch (error) {
+      throw new Error(
+        `Can't find products with category ${category}, ${
+          (error as Error).message
+        }`
       );
     }
   }

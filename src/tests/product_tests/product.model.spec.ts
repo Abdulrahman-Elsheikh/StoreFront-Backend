@@ -14,6 +14,10 @@ describe('Product Model Module', () => {
       expect(productStore.getProduct).toBeDefined();
     });
 
+    it('Should have a get product method', () => {
+      expect(productStore.getProductsByCategory).toBeDefined();
+    });
+
     it('Should have a create product method', () => {
       expect(productStore.createProduct).toBeDefined();
     });
@@ -63,6 +67,13 @@ describe('Product Model Module', () => {
     it('Should return all products', async () => {
       const products = await productStore.getAllProducts();
       expect(products.length).toBe(2);
+    });
+
+    it('Should return all products with a specific category', async () => {
+      const products = await productStore.getProductsByCategory(
+        product.category as string
+      );
+      expect(products.length).toBe(1);
     });
 
     it('Should return a specific product', async () => {

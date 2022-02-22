@@ -90,6 +90,14 @@ describe('Product API endpoints', () => {
       expect(res.body.data.length).toBe(2);
     });
 
+    it('Should get a list of products with a specific', async () => {
+      const res = await request
+        .get(`/api/products/category/${product.category}`)
+        .set('Content-Type', 'application/json');
+      expect(res.status).toBe(200);
+      expect(res.body.data.length).toBe(1);
+    });
+
     it('Should get a product info', async () => {
       const res = await request
         .get(`/api/products/${product.id}`)

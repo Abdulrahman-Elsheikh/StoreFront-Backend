@@ -14,4 +14,6 @@ routes
   .patch(authenticationMiddleware, controllers.updateProduct)
   .delete(authenticationMiddleware, controllers.deleteProduct);
 
+routes.route('/category/:category').get(controllers.getProductsByCategory);
+
 export default routes;

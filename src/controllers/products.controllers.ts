@@ -53,6 +53,24 @@ export const getProduct = async (
     next(error);
   }
 };
+export const getProductsByCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const products = await productStore.getProductsByCategory(
+      req.params.category as unknown as string
+    );
+    res.json({
+      status: 'success',
+      message: `Products with Category ${req.params.category} Retrieved Successfully`,
+      data: products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 export const updateProduct = async (
   req: Request,
   res: Response,
