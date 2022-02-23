@@ -41,13 +41,13 @@ export const getUserOrders = async (
   next: NextFunction
 ) => {
   try {
-    const products = await orderStore.getUserOrders(
+    const orders = await orderStore.getUserOrders(
       req.params.id as unknown as string
     );
     res.json({
       status: 'success',
       message: 'Orders Retrieved Successfully',
-      data: products,
+      data: orders,
     });
   } catch (error) {
     next(error);
@@ -79,13 +79,51 @@ export const getCompletedOrders = async (
   next: NextFunction
 ) => {
   try {
-    const products = await orderStore.getCompletedOrders(
+    const orders = await orderStore.getCompletedOrders(
       req.params.id as unknown as string
     );
     res.json({
       status: 'success',
       message: 'Orders Retrieved Successfully',
-      data: products,
+      data: orders,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const deleteOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const order = await orderStore.deleteOrder(
+      req.params.id as unknown as string
+    );
+    res.json({
+      status: 'success',
+      message: 'Order Deleted Successfully',
+      data: order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+export const removeProductFromOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const order = await orderStore.removeProductFromOrder(
+      req.body.order_id as unknown as string,
+      req.body.product_id as unknown as string,
+      req.body.quantity as unknown as number
+    );
+    res.json({
+      status: 'success',
+      message: 'Product Removed From Order Successfully',
+      data: { ...order },
     });
   } catch (error) {
     next(error);

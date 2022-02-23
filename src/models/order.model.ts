@@ -110,6 +110,84 @@ class OrderStore {
       );
     }
   }
+  // Delete an Order
+  async deleteOrder(id: string): Promise<Order> {
+    try {
+      const connection = await db.connect();
+      const orderSql = `SELECT * FROM orders WHERE id=$1`;
+      const result = await connection.query(orderSql, [id]);
+      const order = result.rows[0];
+
+      if (order.status === 'completed') {
+        throw new Error(
+          `Unable to delete order because order status is ${order.status}`
+        );
+      }
+      connection.release();
+    } catch (error) {
+      throw new Error(
+        `Unable to delete order (${id}): ${(error as Error).message}`
+      );
+    }
+
+    try {
+      const connection = await db.connect();
+      const sql = `DELETE FROM orders WHERE id=$1 RETURNING *`;
+      const result = await connection.query(sql, [id]);
+      const order: Order = result.rows[0];
+      connection.release();
+      return order;
+    } catch (error) {
+      throw new Error(
+        `Unable to delete order (${id}): ${(error as Error).message}`
+      );
+    }
+  }
+  // Remove Product from Order
+  async removeProductFromOrder(
+    order_id: string,
+    product_id: string,
+    quantity: number
+  ): Promise<OrderProduct> {
+    try {
+      const connection = await db.connect();
+      const orderSql = `SELECT * FROM orders WHERE id=$1;`;
+      const result = await connection.query(orderSql, [order_id]);
+      const order = result.rows[0];
+
+      if (order.status === 'completed') {
+        throw new Error(
+          `Unable to remove product (${product_id}) from order (${order_id}) because order status is ${order.status}`
+        );
+      }
+      connection.release();
+    } catch (error) {
+      throw new Error(
+        `Unable to remove product (${product_id}) from order (${order_id}): ${
+          (error as Error).message
+        }`
+      );
+    }
+
+    try {
+      const connection = await db.connect();
+      const sql = `DELETE FROM orderproduct WHERE order_id=$1 AND product_id=$2 AND quantity=$3 RETURNING *`;
+      const result = await connection.query(sql, [
+        order_id,
+        product_id,
+        quantity,
+      ]);
+      const order: OrderProduct = result.rows[0];
+      connection.release();
+      return order;
+    } catch (error) {
+      throw new Error(
+        `Unable to add product (${product_id}) to order (${order_id}): ${
+          (error as Error).message
+        }`
+      );
+    }
+  }
 }
 
 export default OrderStore;

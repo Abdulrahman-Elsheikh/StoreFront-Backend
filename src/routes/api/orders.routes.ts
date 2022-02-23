@@ -9,14 +9,18 @@ routes
   .post(authenticationMiddleware, controllers.createOrder)
   .patch(authenticationMiddleware, controllers.updateOrderStatus);
 
-routes.route('/:id').get(authenticationMiddleware, controllers.getUserOrders);
+routes
+  .route('/:id')
+  .get(authenticationMiddleware, controllers.getUserOrders)
+  .delete(authenticationMiddleware, controllers.deleteOrder);
 
 routes
   .route('/completed/:id')
   .get(authenticationMiddleware, controllers.getCompletedOrders);
 
 routes
-  .route('/product')
-  .post(authenticationMiddleware, controllers.addProductToOrder);
+  .route('/product/:id')
+  .post(authenticationMiddleware, controllers.addProductToOrder)
+  .delete(authenticationMiddleware, controllers.removeProductFromOrder);
 
 export default routes;
