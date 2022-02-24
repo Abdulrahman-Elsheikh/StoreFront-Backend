@@ -59,14 +59,8 @@ describe('Order Model Module', () => {
 
     const order = {
       user_id: user.id,
-      status: 'active',
+      status: 'test',
     } as Order;
-
-    const orderproduct = {
-      order_id: order.id,
-      product_id: product.id,
-      quantity: 23,
-    } as OrderProduct;
 
     beforeAll(async () => {
       const createdUser = await userStore.createUser(user);
@@ -88,59 +82,65 @@ describe('Order Model Module', () => {
       connection.release();
     });
 
-    it('Should return a new product', async () => {
-      const createdProduct = await productStore.createProduct({
-        name: 'test2Product',
-        price: 20,
-        category: 'test2',
-      } as Product);
-      expect(createdProduct).toEqual({
-        id: createdProduct.id,
-        name: 'test2Product',
-        price: 20,
-        category: 'test2',
-      } as Product);
+    it('Should create a new order', async () => {
+      const createdOrder = await orderStore.createOrder({
+        user_id: user.id,
+        status: 'completed',
+      } as Order);
+      expect(createdOrder).toEqual({
+        id: createdOrder.id,
+        user_id: user.id,
+        status: 'completed',
+      } as Order);
     });
 
-    it('Should return all products', async () => {
-      const products = await productStore.getAllProducts();
-      expect(products.length).toBe(2);
+    it('Should update an order status', async () => {
+      const updatedOrder = await orderStore.updateOrderStatus({
+        ...order,
+        status: 'active',
+      } as Order);
+      expect(updatedOrder.id).toBe(order.id);
+      expect(updatedOrder.user_id).toBe(order.user_id);
+      expect(updatedOrder.status).toBe('active');
     });
 
-    it('Should return all products with a specific category', async () => {
-      const products = await productStore.getProductsByCategory(
-        product.category as string
+    it('Should return all orders for user', async () => {
+      const orders = await orderStore.getUserOrders(user.id as string);
+      expect(orders.length).toBe(2);
+    });
+
+    it('Should return all completed orders for user', async () => {
+      const orders = await orderStore.getCompletedOrders(user.id as string);
+      expect(orders.length).toBe(1);
+    });
+
+    it('Should add a product to an order', async () => {
+      const returnedOrder: OrderProduct = await orderStore.addProductToOrder(
+        order.id as string,
+        product.id as string,
+        83
       );
-      expect(products.length).toBe(1);
+      expect(returnedOrder.id).toBe(returnedOrder.id);
+      expect(returnedOrder.order_id).toBe(order.id as string);
+      expect(returnedOrder.product_id).toBe(product.id as string);
+      expect(returnedOrder.quantity).toBe(83);
     });
 
-    it('Should return a specific product', async () => {
-      const returnedProduct: Product = await productStore.getProduct(
-        product.id as string
+    it('Should remove a product from an order', async () => {
+      const removedProduct = await orderStore.removeProductFromOrder(
+        order.id as string,
+        product.id as string,
+        83
       );
-      expect(returnedProduct.id).toBe(product.id);
-      expect(returnedProduct.name).toBe(product.name);
-      expect(returnedProduct.price).toBe(product.price);
-      expect(returnedProduct.category).toBe(product.category);
+      expect(removedProduct.id).toBe(removedProduct.id);
+      expect(removedProduct.order_id).toBe(order.id as string);
+      expect(removedProduct.product_id).toBe(product.id as string);
+      expect(removedProduct.quantity).toBe(83);
     });
 
-    it('Should update a specific product', async () => {
-      const updatedProduct = await productStore.updateProduct({
-        ...product,
-        name: 'testProduct Updated',
-        price: 500,
-      } as Product);
-      expect(updatedProduct.id).toBe(product.id);
-      expect(updatedProduct.name).toBe('testProduct Updated');
-      expect(updatedProduct.price).toBe(500);
-      expect(updatedProduct.category).toBe(product.category);
-    });
-
-    it('Should delete a specific product', async () => {
-      const deleteProduct = await productStore.deleteProduct(
-        product.id as string
-      );
-      expect(deleteProduct.id).toBe(product.id);
+    it('Should delete a specific order', async () => {
+      const deletedOrder = await orderStore.deleteOrder(order.id as string);
+      expect(deletedOrder.id).toBe(order.id);
     });
   });
 });

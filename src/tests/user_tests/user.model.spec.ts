@@ -33,7 +33,7 @@ describe('User Model Module', () => {
 
   describe('Test User Model Logic', () => {
     const user = {
-      email: 'test@test.com',
+      email: 'test@user.com',
       user_name: 'testUser',
       first_name: 'Test',
       last_name: 'User',
