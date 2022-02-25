@@ -14,7 +14,7 @@ app.use(express.json());
 app.use('/api', routes);
 
 app.get('/', function (_req: Request, res: Response) {
-  res.send('Hello World!');
+  res.send('Welcome To Our Store');
 });
 
 app.use(errorMiddleware);
