@@ -1,6 +1,6 @@
 CREATE TABLE orderproduct(
     id SERIAL PRIMARY KEY,
-    order_id integer NOT NULL REFERENCES orders(id),
-    product_id integer NOT NULL REFERENCES products(id),
-    quantity integer NOT NULL
+    order_id INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+    product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL
 );
