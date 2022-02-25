@@ -34,7 +34,7 @@ class ProductStore {
     }
   }
   // Get A Specific Product
-  async getProduct(id: string): Promise<Product> {
+  async getProduct(id: number): Promise<Product> {
     try {
       const connection = await db.connect();
       const sql = `SELECT * FROM products WHERE id = $1`;
@@ -83,7 +83,7 @@ class ProductStore {
     }
   }
   // Delete Product
-  async deleteProduct(id: string): Promise<Product> {
+  async deleteProduct(id: number): Promise<Product> {
     try {
       const connection = await db.connect();
       const sql = `DELETE FROM products WHERE id=($1) RETURNING *`;

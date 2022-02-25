@@ -42,7 +42,7 @@ export const getUserOrders = async (
 ) => {
   try {
     const orders = await orderStore.getUserOrders(
-      req.params.id as unknown as string
+      req.params.id as unknown as number
     );
     res.json({
       status: 'success',
@@ -60,8 +60,8 @@ export const addProductToOrder = async (
 ) => {
   try {
     const order = await orderStore.addProductToOrder(
-      req.body.order_id as unknown as string,
-      req.body.product_id as unknown as string,
+      req.body.order_id as unknown as number,
+      req.body.product_id as unknown as number,
       req.body.quantity as unknown as number
     );
     res.json({
@@ -80,7 +80,7 @@ export const getCompletedOrders = async (
 ) => {
   try {
     const orders = await orderStore.getCompletedOrders(
-      req.params.id as unknown as string
+      req.params.id as unknown as number
     );
     res.json({
       status: 'success',
@@ -98,7 +98,7 @@ export const deleteOrder = async (
 ) => {
   try {
     const order = await orderStore.deleteOrder(
-      req.params.id as unknown as string
+      req.params.id as unknown as number
     );
     res.json({
       status: 'success',
@@ -116,8 +116,8 @@ export const removeProductFromOrder = async (
 ) => {
   try {
     const order = await orderStore.removeProductFromOrder(
-      req.body.order_id as unknown as string,
-      req.body.product_id as unknown as string,
+      req.body.order_id as unknown as number,
+      req.body.product_id as unknown as number,
       req.body.quantity as unknown as number
     );
     res.json({

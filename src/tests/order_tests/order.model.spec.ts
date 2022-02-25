@@ -58,7 +58,7 @@ describe('Order Model Module', () => {
     } as User;
 
     const order = {
-      user_id: user.id,
+      user_id: 1,
       status: 'test',
     } as Order;
 
@@ -73,12 +73,18 @@ describe('Order Model Module', () => {
 
     afterAll(async () => {
       const connection = await db.connect();
-      const userSql = 'DELETE FROM users;';
-      const productSql = 'DELETE FROM products;';
       const orderSql = 'DELETE FROM orders;';
-      await connection.query(userSql);
-      await connection.query(productSql);
+      const altrOrders = 'ALTER SEQUENCE products_id_seq RESTART WITH 1;';
+      const productSql = 'DELETE FROM products;';
+      const altrProducts = 'ALTER SEQUENCE products_id_seq RESTART WITH 1;';
+      const userSql = 'DELETE FROM users;';
+      const altrUsers = 'ALTER SEQUENCE users_id_seq RESTART WITH 1;';
       await connection.query(orderSql);
+      await connection.query(altrOrders);
+      await connection.query(productSql);
+      await connection.query(altrProducts);
+      await connection.query(userSql);
+      await connection.query(altrUsers);
       connection.release();
     });
 
@@ -105,41 +111,41 @@ describe('Order Model Module', () => {
     });
 
     it('Should return all orders for user', async () => {
-      const orders = await orderStore.getUserOrders(user.id as string);
+      const orders = await orderStore.getUserOrders(user.id as number);
       expect(orders.length).toBe(2);
     });
 
     it('Should return all completed orders for user', async () => {
-      const orders = await orderStore.getCompletedOrders(user.id as string);
+      const orders = await orderStore.getCompletedOrders(user.id as number);
       expect(orders.length).toBe(1);
     });
 
     it('Should add a product to an order', async () => {
       const returnedOrder: OrderProduct = await orderStore.addProductToOrder(
-        order.id as string,
-        product.id as string,
+        order.id as number,
+        product.id as number,
         83
       );
       expect(returnedOrder.id).toBe(returnedOrder.id);
-      expect(returnedOrder.order_id).toBe(order.id as string);
-      expect(returnedOrder.product_id).toBe(product.id as string);
+      expect(returnedOrder.order_id).toBe(order.id as number);
+      expect(returnedOrder.product_id).toBe(product.id as number);
       expect(returnedOrder.quantity).toBe(83);
     });
 
     it('Should remove a product from an order', async () => {
       const removedProduct = await orderStore.removeProductFromOrder(
-        order.id as string,
-        product.id as string,
+        order.id as number,
+        product.id as number,
         83
       );
       expect(removedProduct.id).toBe(removedProduct.id);
-      expect(removedProduct.order_id).toBe(order.id as string);
-      expect(removedProduct.product_id).toBe(product.id as string);
+      expect(removedProduct.order_id).toBe(order.id as number);
+      expect(removedProduct.product_id).toBe(product.id as number);
       expect(removedProduct.quantity).toBe(83);
     });
 
     it('Should delete a specific order', async () => {
-      const deletedOrder = await orderStore.deleteOrder(order.id as string);
+      const deletedOrder = await orderStore.deleteOrder(order.id as number);
       expect(deletedOrder.id).toBe(order.id);
     });
   });

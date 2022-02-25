@@ -34,7 +34,7 @@ class OrderStore {
     }
   }
   // Get User Orders
-  async getUserOrders(user_id: string): Promise<Order[]> {
+  async getUserOrders(user_id: number): Promise<Order[]> {
     try {
       const connection = await db.connect();
       const sql = `SELECT * FROM orders WHERE user_id = $1`;
@@ -51,8 +51,8 @@ class OrderStore {
   }
   // Add Product to order
   async addProductToOrder(
-    order_id: string,
-    product_id: string,
+    order_id: number,
+    product_id: number,
     quantity: number
   ): Promise<OrderProduct> {
     try {
@@ -95,7 +95,7 @@ class OrderStore {
     }
   }
   // Get Complete Orders
-  async getCompletedOrders(user_id: string): Promise<Order[]> {
+  async getCompletedOrders(user_id: number): Promise<Order[]> {
     try {
       const connection = await db.connect();
       const sql = `SELECT * FROM orders WHERE user_id = $1 AND status = $2;`;
@@ -111,7 +111,7 @@ class OrderStore {
     }
   }
   // Delete an Order
-  async deleteOrder(id: string): Promise<Order> {
+  async deleteOrder(id: number): Promise<Order> {
     try {
       const connection = await db.connect();
       const orderSql = `SELECT * FROM orders WHERE id=$1`;
@@ -145,8 +145,8 @@ class OrderStore {
   }
   // Remove Product from Order
   async removeProductFromOrder(
-    order_id: string,
-    product_id: string,
+    order_id: number,
+    product_id: number,
     quantity: number
   ): Promise<OrderProduct> {
     try {

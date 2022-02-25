@@ -31,7 +31,7 @@ describe('Order API endpoints', () => {
   } as Product;
 
   const order = {
-    user_id: user.id,
+    user_id: 1,
     status: 'test',
   } as Order;
 
@@ -46,12 +46,18 @@ describe('Order API endpoints', () => {
 
   afterAll(async () => {
     const connection = await db.connect();
-    const sql = 'DELETE FROM users;';
-    const sql2 = 'DELETE FROM products;';
-    const sql3 = 'DELETE FROM orders;';
-    await connection.query(sql);
-    await connection.query(sql2);
-    await connection.query(sql3);
+    const orderSql = 'DELETE FROM orders;';
+    const altrOrders = 'ALTER SEQUENCE products_id_seq RESTART WITH 1;';
+    const productSql = 'DELETE FROM products;';
+    const altrProducts = 'ALTER SEQUENCE products_id_seq RESTART WITH 1;';
+    const userSql = 'DELETE FROM users;';
+    const altrUsers = 'ALTER SEQUENCE users_id_seq RESTART WITH 1;';
+    await connection.query(orderSql);
+    await connection.query(altrOrders);
+    await connection.query(productSql);
+    await connection.query(altrProducts);
+    await connection.query(userSql);
+    await connection.query(altrUsers);
     connection.release();
   });
 
@@ -84,7 +90,7 @@ describe('Order API endpoints', () => {
         .set('Content-Type', 'application/json')
         .set('Authorization', `Bearer ${token}`)
         .send({
-          user_id: 'testProduct2',
+          user_id: user.id,
           status: 'completed',
         } as Order);
       expect(res.status).toBe(200);
@@ -107,7 +113,7 @@ describe('Order API endpoints', () => {
       const { id, user_id, status } = res.body.data;
       expect(id).toBe(res.body.data.id);
       expect(user_id).toBe(user.id);
-      expect(status).toBe('completed');
+      expect(status).toBe('active');
     });
 
     it('Should get a list of orders for a user', async () => {

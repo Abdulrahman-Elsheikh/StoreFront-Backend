@@ -47,7 +47,7 @@ class UserStore {
     }
   }
   // Get Specific User
-  async getUser(id: string): Promise<User> {
+  async getUser(id: number): Promise<User> {
     try {
       const connection = await db.connect();
       const sql = `SELECT id, email, user_name, first_name, last_name FROM users WHERE id = $1`;
@@ -82,7 +82,7 @@ class UserStore {
     }
   }
   // Delete User
-  async deleteUser(id: string): Promise<User> {
+  async deleteUser(id: number): Promise<User> {
     try {
       const connection = await db.connect();
       const sql = `DELETE FROM users WHERE id=($1) RETURNING id, email, user_name, first_name, last_name`;

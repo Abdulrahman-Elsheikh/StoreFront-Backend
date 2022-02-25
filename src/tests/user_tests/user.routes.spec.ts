@@ -25,7 +25,9 @@ describe('User API endpoints', () => {
   afterAll(async () => {
     const connection = await db.connect();
     const sql = 'DELETE FROM users;';
+    const altrUsers = 'ALTER SEQUENCE users_id_seq RESTART WITH 1;';
     await connection.query(sql);
+    await connection.query(altrUsers);
     connection.release();
   });
 

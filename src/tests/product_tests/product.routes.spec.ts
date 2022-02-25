@@ -36,9 +36,13 @@ describe('Product API endpoints', () => {
   afterAll(async () => {
     const connection = await db.connect();
     const sql = 'DELETE FROM users;';
+    const altrUsers = 'ALTER SEQUENCE users_id_seq RESTART WITH 1;';
     const sql2 = 'DELETE FROM products;';
+    const altrProducts = 'ALTER SEQUENCE products_id_seq RESTART WITH 1;';
     await connection.query(sql);
+    await connection.query(altrUsers);
     await connection.query(sql2);
+    await connection.query(altrProducts);
     connection.release();
   });
 

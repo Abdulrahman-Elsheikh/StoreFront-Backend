@@ -43,7 +43,7 @@ export const getUser = async (
   next: NextFunction
 ) => {
   try {
-    const user = await userStore.getUser(req.params.id as unknown as string);
+    const user = await userStore.getUser(req.params.id as unknown as number);
     res.json({
       status: 'success',
       message: 'User Retrieved Successfully',
@@ -75,7 +75,7 @@ export const deleteUser = async (
   next: NextFunction
 ) => {
   try {
-    const user = await userStore.deleteUser(req.params.id as unknown as string);
+    const user = await userStore.deleteUser(req.params.id as unknown as number);
     res.json({
       status: 'success',
       message: 'User Deleted Successfully',

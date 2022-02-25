@@ -48,7 +48,9 @@ describe('User Model Module', () => {
     afterAll(async () => {
       const connection = await db.connect();
       const sql = 'DELETE FROM users;';
+      const altrUsers = 'ALTER SEQUENCE users_id_seq RESTART WITH 1;';
       await connection.query(sql);
+      await connection.query(altrUsers);
       connection.release();
     });
 
@@ -75,7 +77,7 @@ describe('User Model Module', () => {
     });
 
     it('Should return a specific user', async () => {
-      const returnedUser: User = await userStore.getUser(user.id as string);
+      const returnedUser: User = await userStore.getUser(user.id as number);
       expect(returnedUser.id).toBe(user.id);
       expect(returnedUser.email).toBe(user.email);
       expect(returnedUser.user_name).toBe(user.user_name);
@@ -98,7 +100,7 @@ describe('User Model Module', () => {
     });
 
     it('Should delete a specific user', async () => {
-      const deletedUser = await userStore.deleteUser(user.id as string);
+      const deletedUser = await userStore.deleteUser(user.id as number);
       expect(deletedUser.id).toBe(user.id);
     });
   });

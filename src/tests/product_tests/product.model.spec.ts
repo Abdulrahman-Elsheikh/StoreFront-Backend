@@ -46,7 +46,9 @@ describe('Product Model Module', () => {
     afterAll(async () => {
       const connection = await db.connect();
       const sql = 'DELETE FROM products;';
+      const altrProducts = 'ALTER SEQUENCE products_id_seq RESTART WITH 1;';
       await connection.query(sql);
+      await connection.query(altrProducts);
       connection.release();
     });
 
@@ -78,7 +80,7 @@ describe('Product Model Module', () => {
 
     it('Should return a specific product', async () => {
       const returnedProduct: Product = await productStore.getProduct(
-        product.id as string
+        product.id as number
       );
       expect(returnedProduct.id).toBe(product.id);
       expect(returnedProduct.name).toBe(product.name);
@@ -100,7 +102,7 @@ describe('Product Model Module', () => {
 
     it('Should delete a specific product', async () => {
       const deleteProduct = await productStore.deleteProduct(
-        product.id as string
+        product.id as number
       );
       expect(deleteProduct.id).toBe(product.id);
     });
